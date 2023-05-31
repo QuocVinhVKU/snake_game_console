@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,7 +61,7 @@ namespace SnakeGame
                 scorePlus = fruitScore5;
                 fruit = "@";
             }
-            else if(randFruit == 2)
+            else if (randFruit == 2)
             {
                 scorePlus = fruitScore10;
                 fruit = "$";
@@ -99,12 +99,12 @@ namespace SnakeGame
                     case ConsoleKey.Q: Environment.Exit(0); break;
                     case ConsoleKey.P: dir = "PAUSE"; break;
                     case ConsoleKey.LeftArrow:
-                        if(pre_dir == "UP" || pre_dir == "DOWN")
+                        if (pre_dir == "UP" || pre_dir == "DOWN")
                             dir = "LEFT";
                         break;
                     case ConsoleKey.RightArrow:
                         if (pre_dir == "UP" || pre_dir == "DOWN")
-                            dir = "RIGHT"; 
+                            dir = "RIGHT";
                         break;
                     case ConsoleKey.UpArrow:
                         if (pre_dir == "LEFT" || pre_dir == "RIGHT")
@@ -112,7 +112,7 @@ namespace SnakeGame
                         break;
                     case ConsoleKey.DownArrow:
                         if (pre_dir == "LEFT" || pre_dir == "RIGHT")
-                            dir = "DOWN"; 
+                            dir = "DOWN";
                         break;
                 }
             }
@@ -175,24 +175,19 @@ namespace SnakeGame
                 score += scorePlus; nTail++;    //tinh diem khi an qua
                 randonQua();            //random diem qua moi
             }
-
-            if (((dir == "LEFT" && pre_dir != "UP") && (dir == "LEFT" && pre_dir != "DOWN")) ||
-                ((dir == "RIGHT" && pre_dir != "UP") && (dir == "RIGHT" && pre_dir != "DOWN")))
-                horizontal = true;
-            else horizontal = false;
-
-            if (((dir == "UP" && pre_dir != "LEFT") && (dir == "UP" && pre_dir != "RIGHT")) ||
-                ((dir == "DOWN" && pre_dir != "LEFT") && (dir == "DOWN" && pre_dir != "RIGHT")))
-                vertical = true;
-            else vertical = false;
-
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    if ((headX > 3 && headX < 10) && (headY > 4 && headY < 7)) gameOver = true;
+                }
+            }
             //kiem tra cai dau va cham than con ran
             for (int i = 1; i < nTail; i++)
             {
                 if (headX == TailX[i] && headY == TailY[i])
                 {
-                    if (horizontal || vertical) gameOver = false; //quay dau 180 độ [bẫy lỗi quay đầu]
-                    else gameOver = true;
+                    gameOver = true;
                 }
                 if (fruitX == TailX[i] && fruitY == TailY[i]) //quà trùng thân con rắn cho random lại
                     randonQua();
@@ -207,14 +202,33 @@ namespace SnakeGame
             {
                 for (int j = 0; j < width; j++)
                 {
-                    if (i == 0 || i == height - 1)   //viền khung trên và dưới
+                    if (i == 0 || i == height - 1)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("=");
-                    else if (j == 0 || j == width - 1) //viền khung trái và phải
+                        Console.ForegroundColor = ConsoleColor.Green;//viền khung trên và dưới
+                    }
+                    else if (j == 0 || j == width - 1)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.Write("||");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }//viền khung trái và phải
+                    else if ((j > 3 && j < 10) && (i > 4 && i < 7))
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.Write("*"); //tường
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }
                     else if (j == fruitX && i == fruitY) //hộp quả 
                         Console.Write(fruit);
-                    else if (j == headX && i == headY) //đầu con rắn
+                    else if (j == headX && i == headY) 
+                    { 
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write("0");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                    }//đầu con rắn
+                    
                     else
                     {
                         isprinted = false;
@@ -222,16 +236,18 @@ namespace SnakeGame
                         {
                             if (TailX[k] == j && TailY[k] == i)
                             {
-                                Console.Write("o");  //thân con rắn
-                                
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.Write("0"); //thân con rắn
+                                Console.ForegroundColor = ConsoleColor.Green;
+
                                 isprinted = true;
                             }
                         }
                         if (!isprinted)
                         {
-                            Console.Write("_"); //vị trí còn lại
-                        }    
-                            
+                            Console.Write(" "); //vị trí còn lại
+                        }
+
                     }
                 }
                 Console.WriteLine();
